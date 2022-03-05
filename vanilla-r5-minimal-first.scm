@@ -1,8 +1,10 @@
 ;;; miniKanren tabling code by Ramana Kumar
 
-(define make-cache (lambda (ansv*) (vector 'cache ansv*)))
+(define make-cache (lambda (ansv* answ) (vector 'cache ansv* answ)))
 (define cache-ansv* (lambda (v) (vector-ref v 1)))
 (define cache-ansv*-set! (lambda (v val) (vector-set! v 1 val)))
+(define cache-answ (lambda (v) (vector-ref v 2)))
+(define cache-answ-set! (lambda (v val) (vector-set! v 2 val)))
 
 (define make-ss (lambda (cache ansv* f) (vector 'ss cache ansv* f)))
 (define ss? (lambda (v) (and (vector? v) (eq? (vector-ref v 0) 'ss))))
@@ -26,16 +28,17 @@
         (else #f)))))
 
 (define reuse
-  (lambda (argv cache s)
+  (lambda (argv argw cache s)
     (let fix ((start (cache-ansv* cache)) (end '()))
       (let loop ((ansv* start))
         (if (eq? ansv* end)
             (list (make-ss cache start (lambdaf@ () (fix (cache-ansv* cache) start))))
-            (choice (subunify argv (reify-var (car ansv*) s) s)
+            (choice (subunify argw (cache-answ cache)
+                              (subunify argv (reify-var (car ansv*) s) s))   
                     (lambdaf@ () (loop (cdr ansv*)))))))))
 
 (define master
-  (lambda (argv cache)
+  (lambda (argv argw cache)
     (lambdag@ (s)
       (and
         (for-all
@@ -45,22 +48,27 @@
           (cache-ansv*-set! cache
                             (cons (reify-var argv s)
                                   (cache-ansv* cache)))
+          (if (eq? (cache-answ cache) '())
+              (cache-answ-set! cache (reify-var argw s))
+              #f)
           s)))))
 
 (define-syntax tabled
   (syntax-rules ()
-    ((_ (x ...) g g* ...)
+    ((_ ((x ...) y ...) g g* ...)
      (let ((table '()))
        (lambda (x ...)
-         (let ((argv (list x ...)))
-           (lambdag@ (s)
-             (let ((key (reify argv s)))
-               (cond
-                 ((assoc key table)
-                  => (lambda (key.cache) (reuse argv (cdr key.cache) s)))
-                 (else (let ((cache (make-cache '())))
-                         (set! table (cons `(,key . ,cache) table))                         
-                         ((fresh () g g* ... (master argv cache)) s))))))))))))
+         (lambda (y ...)
+           (let ((argv (list x ...))
+                 (argw (list y ...)))
+             (lambdag@ (s)
+               (let ((key (reify argv s)))
+                 (cond
+                   ((assoc key table)
+                    => (lambda (key.cache) (reuse argv argw (cdr key.cache) s)))
+                   (else (let ((cache (make-cache '() '())))
+                           (set! table (cons `(,key . ,cache) table))                         
+                           ((fresh () g g* ... (master argv argw cache)) s)))))))))))))
 
 
 (define ss-ready? (lambda (ss) (not (eq? (cache-ansv* (ss-cache ss)) (ss-ansv* ss)))))

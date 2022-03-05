@@ -49,18 +49,19 @@
 
 (define-syntax tabled
   (syntax-rules ()
-    ((_ (x ...) g g* ...)
+    ((_ ((x ...) y ...) g g* ...)
      (let ((table '()))
        (lambda (x ...)
-         (let ((argv (list x ...)))
-           (lambdag@ (s)
-             (let ((key (reify argv s)))
-               (cond
-                 ((assoc key table)
-                  => (lambda (key.cache) (reuse argv (cdr key.cache) s)))
-                 (else (let ((cache (make-cache '())))
-                         (set! table (cons `(,key . ,cache) table))                         
-                         ((fresh () g g* ... (master argv cache)) s))))))))))))
+         (lambda (y ...)
+           (let ((argv (list x ...)))
+             (lambdag@ (s)
+               (let ((key (reify argv s)))
+                 (cond
+                   ((assoc key table)
+                    => (lambda (key.cache) (reuse argv (cdr key.cache) s)))
+                   (else (let ((cache (make-cache '())))
+                           (set! table (cons `(,key . ,cache) table))                         
+                           ((fresh () g g* ... (master argv cache)) s)))))))))))))
 
 
 (define ss-ready? (lambda (ss) (not (eq? (cache-ansv* (ss-cache ss)) (ss-ansv* ss)))))
