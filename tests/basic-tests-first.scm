@@ -66,9 +66,9 @@
 ;; Another problem:
 ;; When `p` is ground, the result is no longer relational.
 
-;; IMO, the mode variable should be
-;; either a fresh variable (always as an output variable and dont' test it),
-;; or a readonly variable.
+;; For the same tabled answer, a `first` argument can only have one unique ground value,
+;; which be unified once, even if in different branches. So `first` arguments should be
+;; as output arguments and never be tested.
 
 (define *table* '())
 

@@ -73,9 +73,10 @@
 ;; Another problem:
 ;; When `p` is ground, the result is no longer relational.
 
-;; IMO, the mode variable should be
-;; either a fresh variable (always as an output variable and dont' test it),
-;; or a readonly variable.
+;; For the same tabled answer, a `nt` argument can only have one ground value, but that
+;; value is just for the master call, the argument in slave calls cannot get that value
+;; (it is still fresh). So slave calls can unify that argument with different ground value.
+;; So `nt` arguments should be as input arguments(?).
 
 (run* (q)
   (letrec ((arco (lambda (x y)
