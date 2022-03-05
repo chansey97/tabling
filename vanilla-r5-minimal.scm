@@ -1,7 +1,5 @@
 ;;; miniKanren tabling code by Ramana Kumar
 
-(load "mkimpl.scm")
-
 (define make-cache (lambda (ansv*) (vector 'cache ansv*)))
 (define cache-ansv* (lambda (v) (vector-ref v 1)))
 (define cache-ansv*-set! (lambda (v val) (vector-set! v 1 val)))

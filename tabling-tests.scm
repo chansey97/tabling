@@ -1,4 +1,4 @@
-(load "vanilla-r5-minimal.scm")
+(load "require.scm")
 
 ;(import (tabling) (rnrs) (rnrs eval))
 
