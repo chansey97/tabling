@@ -33,7 +33,7 @@ N.B. In [Mode-Directed Tabling for Dynamic Programming, Machine Learning, and Co
    ((patho-tabled 'a 'b) '(a b c b c b)) => ()
    ```
 
-   N.B. Most of *mode directed tabling* in Prolog are unsound as well, although the sound implementation exists,  see [Tabling with Sound Answer Subsumption](https://arxiv.org/abs/1608.00787). Also, it is difficult to predict the result of *mode directed tabling* , because they are very dependent on the *scheduling strategy*. For the same query, different *scheduling strategy* (e.g. *batched scheduling* vs *local scheduling*) may yield different answers, see [Dynamic Mixed-Strategy Evaluation of Tabled Logic Programs](https://link.springer.com/chapter/10.1007/11562931_20). BTW, SWI-Prolog implements *local scheduling*, see https://swi-prolog.discourse.group/t/tabling-the-wolf-sheep-cabbage/1893/21.
+   N.B. Most of *mode directed tabling* in Prolog are unsound as well, although the sound implementation exists,  see [Tabling with Sound Answer Subsumption](https://arxiv.org/abs/1608.00787). Also, it is difficult to predict the result of *mode directed tabling* , because they are very dependent on the scheduling strategy. For the same query, different scheduling strategy (e.g. *batched scheduling* vs *local scheduling*) may yield different answers, see [Dynamic Mixed-Strategy Evaluation of Tabled Logic Programs](https://link.springer.com/chapter/10.1007/11562931_20). BTW, SWI-Prolog implements *local scheduling*, see https://swi-prolog.discourse.group/t/tabling-the-wolf-sheep-cabbage/1893/21.
 
    
 
