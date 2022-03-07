@@ -12,9 +12,9 @@ See https://www.swi-prolog.org/pldoc/man?section=tabling-mode-directed
 
 Currently only support `nt` and `first`.
 
-`first` denotes that it is not tabled in the subgoal frame and only the first answer will be recorded;
+`first` denotes that subgoal calls are not tabled in key and only the first answer will be recorded in cache.
 
-`nt` denotes that it is not tabled in the subgoal frame and no answer will be recorded;
+`nt` denotes that subgoal calls are not tabled in key and no answer will be recorded;
 
 N.B. In [Mode-Directed Tabling for Dynamic Programming, Machine Learning, and Constraint Solving](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.225.4784), the authors mentioned `nt`, but I'm not sure if they are the `nt` here. They also said the `nt` is useful in some cases.
 
